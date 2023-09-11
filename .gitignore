@@ -1,0 +1,4 @@
+rustlib/target
+rustlib/Cargo.lock
+libhello.a
+main
