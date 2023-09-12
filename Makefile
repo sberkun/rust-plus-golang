@@ -9,7 +9,7 @@ build:
 	go build main.go
 
 .PHONY: run
-run-static: build
+run: build
 	@./main
 
 .PHONY: clean

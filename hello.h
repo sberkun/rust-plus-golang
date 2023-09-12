@@ -1,13 +1,4 @@
-// NOTE: You could use https://michael-f-bryan.github.io/rust-ffi-guide/cbindgen.html to generate
-// this header automatically from your Rust code.  But for now, we'll just write it by hand.
+#include <stdint.h>
 
 
-struct Dummy {
-    char* thing1;
-    char* thing2;
-};
-
-
-void hello(char *name);
-void whisper(char *message);
-void do_thing(struct Dummy* d);
+void multi_scalar_mult_wrapper(void* p, void* points, void* scalars, uint64_t len);
