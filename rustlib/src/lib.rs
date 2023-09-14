@@ -22,7 +22,7 @@ pub struct G1Jac {
 }
 
 #[no_mangle]
-pub extern "C" fn multi_scalar_mult_wrapper(p: *mut c_void, points: *const c_void, scalars: *const c_void, len: u64) {
+pub extern "C" fn multi_scalar_mult_wrapper(p: *mut c_void, ctx: *mut c_void, points: *const c_void, scalars: *const c_void, len: u64) {
     let points: &[G1Affine] = unsafe {
         slice::from_raw_parts(points as *const G1Affine, len as usize)
     };
@@ -30,6 +30,7 @@ pub extern "C" fn multi_scalar_mult_wrapper(p: *mut c_void, points: *const c_voi
         slice::from_raw_parts(scalars as *const Element, len as usize)
     };
 
+    println!("{:?}", ctx);
     println!("{:?}", points);
     println!("{:?}", scalars);
 
@@ -37,4 +38,9 @@ pub extern "C" fn multi_scalar_mult_wrapper(p: *mut c_void, points: *const c_voi
     unsafe {
         *(p as *mut G1Jac) = return_value;
     }
+}
+
+#[no_mangle]
+pub extern "C" fn multi_scalar_init_wrapper(points: *const c_void, len: u64) -> *mut c_void {
+    return 0x12345 as *mut c_void;
 }

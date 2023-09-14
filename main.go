@@ -24,8 +24,14 @@ type G1Jac struct {
 }
 
 func (p *G1Jac) call_rust_thing(points []G1Affine, scalars []Element) {
+	ctx := C.multi_scalar_init_wrapper(
+		unsafe.Pointer(&points[0]),
+		C.ulong(len(points)),
+	)
+
 	C.multi_scalar_mult_wrapper(
 		unsafe.Pointer(p),
+		ctx,
 		unsafe.Pointer(&points[0]),
 		unsafe.Pointer(&scalars[0]),
 		C.ulong(len(points)),
