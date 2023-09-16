@@ -4,7 +4,7 @@ package main
 // The -ldl is sometimes necessary to fix linker errors about `dlsym`.
 
 /*
-#cgo LDFLAGS: -L./lib -llibblst_msm
+#cgo LDFLAGS: -L./lib -lblst_msm
 #include "./hello.h"
 */
 import "C"
