@@ -4,9 +4,10 @@ ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: build
 build:
-	@cd rustlib && cargo build --release
-	@cp rustlib/target/release/libhello.a .
-	go build main.go
+	cd rustlib && cargo build --release
+	cp rustlib/target/release/libhello.a .
+	rm -f main
+	go build -o main g1.go main.go
 
 .PHONY: run
 run: build

@@ -13,49 +13,56 @@ import (
 	"unsafe"
 )
 
-type Element [6]uint64
+func call_multi_scalar_init(points []G1Affine) unsafe.Pointer {
+	type RustG1Affine struct {
+		X, Y     [6]uint64
+		infinity bool
+	}
 
-type G1Affine struct {
-	X, Y Element
-}
+	rust_points := make([]RustG1Affine, len(points))
+	for i := 0; i < len(points); i++ {
+		rust_points[i] = RustG1Affine{
+			points[i].X,
+			points[i].Y,
+			points[i].IsInfinity(),
+		}
+	}
 
-type G1Jac struct {
-	X, Y, Z Element
-}
-
-func (p *G1Jac) call_rust_thing(points []G1Affine, scalars []Element) {
 	ctx := C.multi_scalar_init_wrapper(
-		unsafe.Pointer(&points[0]),
-		C.ulong(len(points)),
+		unsafe.Pointer(&rust_points[0]),
+		C.ulong(len(rust_points)),
 	)
+	return ctx
+}
 
+func (p *G1Jac) call_multi_scalar_mult(ctx unsafe.Pointer, scalars []frElement) {
 	C.multi_scalar_mult_wrapper(
 		unsafe.Pointer(p),
 		ctx,
-		unsafe.Pointer(&points[0]),
 		unsafe.Pointer(&scalars[0]),
-		C.ulong(len(points)),
+		C.ulong(len(scalars)),
 	)
 }
 
 func main() {
 	points := []G1Affine{
-		{X: Element{1, 2, 3, 4, 5, 6}, Y: Element{7, 8, 9, 10, 11, 12}},
+		{X: fpElement{1, 2, 3, 4, 5, 6}, Y: fpElement{7, 8, 9, 10, 11, 12}},
 		{},
 		{},
 		{},
-		{X: Element{1, 2, 3, 4, 5, 34234}, Y: Element{7, 8, 9, 10, 11, 234234}},
+		{X: fpElement{1, 2, 3, 4, 5, 34234}, Y: fpElement{7, 8, 9, 10, 11, 234234}},
 	}
 
-	scalars := []Element{
-		{4, 4, 4, 4, 4, 4},
-		{5, 5, 5, 5, 5, 5},
+	scalars := []frElement{
+		{4, 4, 4, 4},
+		{5, 5, 5, 5},
 		{},
 		{},
-		{10, 20, 30, 40, 50, 60},
+		{10, 20, 30, 40},
 	}
 
 	p := G1Jac{}
-	p.call_rust_thing(points, scalars)
+	ctx := call_multi_scalar_init(points)
+	p.call_multi_scalar_mult(ctx, scalars)
 	fmt.Println(p)
 }
