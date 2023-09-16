@@ -2,18 +2,27 @@ ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # PHONY means that it doesn't correspond to a file; it always runs the build commands.
 
-.PHONY: build
+.PHONY: build, build-integrated, run-integrated, clean
+
 build:
 	cd rustlib && cargo build --release
 	cp rustlib/target/release/libhello.a .
 	rm -f main
 	go build -o main g1.go main.go
 
-.PHONY: run
+build-integrated:
+	cd submission-msm-gpu && cargo build --release
+	cp submission-msm-gpu/target/release/libhello.a libhello.a
+	rm -f main-integrated
+	go build -o main-integrated g1.go main.go
+
+
 run: build
 	@./main
 
-.PHONY: clean
+run-integrated: build-integrated
+	@./main-integrated
+
 clean:
 	cd rustlib && cargo clean
-	rm -rf main libhello.a
+	rm -rf main main-integrated libhello.a

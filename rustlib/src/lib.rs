@@ -2,10 +2,13 @@ extern crate core;
 extern crate libc;
 extern crate ark_ec;
 extern crate ark_bls12_377;
+extern crate num_traits;
 
 use core::slice;
 use std::mem;
 
+use ark_ec::AffineCurve;
+use num_traits::identities::Zero;
 use libc::c_void;
 use ark_bls12_377::{Fr, G1Affine};
 
@@ -35,6 +38,8 @@ pub extern "C" fn multi_scalar_mult_wrapper(p: *mut c_void, ctx: *mut c_void, sc
 
     println!("banana {}", mem::size_of::<G1Affine>());
     println!("free banana {}", mem::size_of::<Fr>());
+    let b: <G1Affine as AffineCurve>::Projective = 
+        <G1Affine as AffineCurve>::Projective::zero();
 
     println!("{:?}", ctx);
     println!();
