@@ -4,10 +4,10 @@
 
 use std::os::raw::c_void;
 use ark_bls12_377::{Fr, G1Affine};
-use ark_ec::{AffineCurve, short_weierstrass_jacobian::GroupProjective, bn::BnParameters};
-use ark_ff::PrimeField;
+use ark_ec::AffineCurve;
 use ark_std::Zero;
 
+use core::slice;
 
 #[allow(unused_imports)]
 use blst::*;
@@ -94,13 +94,14 @@ pub extern "C" fn multi_scalar_init_wrapper(points_ptr: *const c_void, len: u64)
 
 #[no_mangle]
 pub extern "C" fn multi_scalar_mult_wrapper(p: *mut c_void, ctx: *mut c_void, scalars: *const c_void, len: u64) {
+    let len = len as usize;
     let scalars: &[Fr] = unsafe {
-        slice::from_raw_parts(scalars as *const Fr, len as usize)
+        slice::from_raw_parts(scalars as *const Fr, len)
     };
 
     let v = multi_scalar_mult(ctx, len, scalars);
     unsafe {
-        *(p as *mut GroupProjective<Parameters>) = v[0];
+        *(p as *mut <G1Affine as AffineCurve>::Projective) = v[0];
     }
 }
 

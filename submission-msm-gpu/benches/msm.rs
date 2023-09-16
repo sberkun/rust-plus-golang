@@ -26,7 +26,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     let name = format!("2**{}x{}", npoints_npow, batches);
     group.bench_function(name, |b| {
         b.iter(|| {
-            let _ = multi_scalar_mult(&mut context, &points.as_slice(), unsafe {
+            let _ = multi_scalar_mult(&mut context, points.len(), unsafe {
                 std::mem::transmute::<&[_], &[BigInteger256]>(
                     scalars.as_slice(),
                 )
