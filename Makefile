@@ -14,7 +14,7 @@ build-integrated:
 	cd submission-msm-gpu && cargo build --release
 	cp submission-msm-gpu/target/release/libblst_msm.so libblst_msm.so
 	rm -f main-integrated
-	go build -o main-integrated -ldflags="-r $(ROOT_DIR)" g1.go main.go
+	go build -o main-integrated -ldflags="-r $(ROOT_DIR)" g1.go main-integrated.go
 
 
 run: build
