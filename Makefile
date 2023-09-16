@@ -12,9 +12,10 @@ build:
 
 build-integrated:
 	cd submission-msm-gpu && cargo build --release
-	cp submission-msm-gpu/target/release/libblst_msm.so libblst_msm.so
+	mkdir -p lib
+	cp submission-msm-gpu/target/release/libblst_msm.so lib/libblst_msm.so
 	rm -f main-integrated
-	go build -o main-integrated -ldflags="-r $(ROOT_DIR)" g1.go main-integrated.go
+	go build -o main-integrated -ldflags="-r $(ROOT_DIR)/lib" g1.go main-integrated.go
 
 
 run: build
@@ -26,4 +27,4 @@ run-integrated: build-integrated
 clean:
 	cd rustlib && cargo clean
 	cd submission-msm-gpu && cargo clean
-	rm -rf main main-integrated libhello.a
+	rm -rf main main-integrated libhello.a lib

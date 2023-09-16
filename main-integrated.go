@@ -45,21 +45,8 @@ func (p *G1Jac) call_multi_scalar_mult(ctx unsafe.Pointer, scalars []frElement) 
 }
 
 func main() {
-	points := []G1Affine{
-		{X: fpElement{1, 2, 3, 4, 5, 6}, Y: fpElement{7, 8, 9, 10, 11, 12}},
-		{},
-		{},
-		{},
-		{X: fpElement{1, 2, 3, 4, 5, 34234}, Y: fpElement{7, 8, 9, 10, 11, 234234}},
-	}
-
-	scalars := []frElement{
-		{4, 4, 4, 4},
-		{5, 5, 5, 5},
-		{},
-		{},
-		{10, 20, 30, 40},
-	}
+	points := make([]G1Affine, 65536)
+	scalars := make([]frElement, 65536)
 
 	p := G1Jac{}
 	ctx := call_multi_scalar_init(points)

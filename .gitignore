@@ -4,3 +4,4 @@ submission-msm-gpu/target
 submission-msm-gpu/Cargo.lock
 libhello.a
 main
+lib
